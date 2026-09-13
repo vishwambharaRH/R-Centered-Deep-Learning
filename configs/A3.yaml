@@ -1,0 +1,53 @@
+# A3 — A2 + normalized temporal-position channel (matched A0-A4 ablation, Table 2)
+experiment: A3
+description: >
+  Adds a second input channel encoding the normalized R-relative time position
+  of each sample within the window (-PRE/POST at the left edge, 0 at the R peak,
+  +1 at the right edge), on top of A2's extended post-R context.
+
+sampling_rate_hz: 250
+
+window:
+  length: 440
+  r_centered: true
+  pre_r: 120
+  post_r: 320
+  temporal_position_channel: true
+
+model:
+  architecture: RPeakTimeML2
+  input_channels: 2
+  conv1_filters: 32
+  conv1_kernel: 7
+  conv2_filters: 64
+  conv2_kernel: 5
+  bilstm_hidden: 128
+  bilstm_layers: 1
+  bidirectional: true
+  dropout: 0.3
+  num_classes: 3
+
+training:
+  optimizer: Adam
+  learning_rate: 0.001
+  batch_size: 64
+  epochs: 15
+  seeds: [1, 2, 3]
+  early_stopping: false
+  checkpoint_selection: best_validation_loss
+
+loss:
+  type: unweighted_focal
+  gamma: 2.0
+
+dataset:
+  train: qtdb_train
+  validation: qtdb_validation
+  test: ludb_test
+
+results:
+  ludb_macro_f1_mean: 0.8263
+  ludb_macro_f1_std: 0.0061
+  note: >
+    Macro F1 decreased slightly relative to A2, indicating that additional
+    temporal encoding does not necessarily improve performance monotonically.

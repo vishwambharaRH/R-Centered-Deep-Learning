@@ -1,0 +1,56 @@
+# R6 — Temporal-position channel + supervised LUDB adaptation (Table 3)
+experiment: R6
+description: >
+  Adds the normalized temporal-position channel to R5 and performs supervised
+  adaptation on 20 LUDB records (10%), evaluated on the remaining 180 held-out
+  records. This adapt/test protocol (distinct from R1-R5's direct-generalization
+  protocol on all 200 LUDB records) became the template for the paper's matched
+  A4 configuration.
+
+sampling_rate_hz: 250
+window: {length: 440, r_centered: true, pre_r: 120, post_r: 320, temporal_position_channel: true}
+
+model:
+  architecture: RPeakTimeML2
+  input_channels: 2
+  conv1_filters: 32
+  conv1_kernel: 7
+  conv2_filters: 64
+  conv2_kernel: 5
+  bilstm_hidden: 128
+  dropout: 0.3
+  num_classes: 3
+
+training:
+  pretrain:
+    optimizer: Adam
+    learning_rate: 0.001
+    batch_size: 64
+    epochs: 30
+    dataset: {train: qtdb_train, validation: qtdb_validation}
+    checkpoint: best_ml2_r6_time_qtdb.pth
+  adaptation:
+    optimizer: Adam
+    learning_rate: 0.0001
+    batch_size: 64
+    epochs: 8
+    dataset: {adaptation: ludb_adaptation_10pct}
+    checkpoint_selection: final_epoch
+    checkpoint: best_ml2_r6_time_ludb10.pth
+    note: Epoch budget fixed before scoring the untouched LUDB test records.
+
+loss:
+  type: cross_entropy
+
+dataset:
+  test: ludb_test_180
+
+results:
+  qtdb_macro_f1: 0.9122
+  ludb_macro_f1: 0.8451
+  ludb_records_trained: 20
+  ludb_records_tested: 180
+  comparison_table:
+    - {experiment: "R1 external, POST=240", ludb_trained: 0, ludb_tested: 200, p_f1: 0.780694, t_f1: 0.746798, macro_f1: 0.815754}
+    - {experiment: "R5 external, POST=320", ludb_trained: 0, ludb_tested: 200, p_f1: 0.795537, t_f1: 0.766102, macro_f1: 0.825932}
+    - {experiment: "R6 time + 10% LUDB adaptation", ludb_trained: 20, ludb_tested: 180, p_f1: 0.810711, t_f1: 0.802211, macro_f1: 0.845117}

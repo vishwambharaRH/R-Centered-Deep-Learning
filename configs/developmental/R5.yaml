@@ -1,0 +1,51 @@
+# R5 — R-peak audit + R-centered representation + extended post-R context (Table 3)
+experiment: R5
+description: >
+  Replaces R4's hard physiological constraint with a learned R-centered
+  representation and extended post-R context (POST=320), restoring and
+  improving performance over R3. Also introduces the independent R-peak
+  detector audit (Section 4.6 / Table 6).
+
+sampling_rate_hz: 250
+window: {length: 440, r_centered: true, pre_r: 120, post_r: 320}
+
+model:
+  architecture: RPeakGuidedML2
+  input_channels: 1
+  conv1_filters: 32
+  conv1_kernel: 7
+  conv2_filters: 64
+  conv2_kernel: 5
+  bilstm_hidden: 128
+  dropout: 0.3
+  num_classes: 3
+
+training:
+  optimizer: Adam
+  learning_rate: 0.001
+  batch_size: 64
+  epochs: 30
+  checkpoint_selection: best_validation_loss
+
+loss:
+  type: cross_entropy
+
+dataset:
+  train: qtdb_train
+  validation: qtdb_validation
+  test: ludb_full_200
+
+results:
+  qtdb_macro_f1: 0.9071
+  ludb_macro_f1: 0.8266
+  best_epoch: 13
+  best_validation_loss: 0.1902
+  checkpoint: best_ml2_r5_post320.pth
+  r_peak_audit:
+    qtdb: {sensitivity: 0.9780, ppv: 0.9863, f1: 0.9804, mean_timing_error_ms: 13.31}
+    ludb: {sensitivity: 0.9753, ppv: 0.7971, f1: 0.8800, mean_timing_error_ms: 3.07}
+  note: >
+    R3 and R5 LUDB results use direct-generalization evaluation on all 200
+    LUDB records; this differs from R6's adapt/test protocol below, so the
+    numerical difference between R5 and R6 should not be read as a controlled
+    estimate of the adaptation effect (see paper Section 4.3).

@@ -1,0 +1,13 @@
+seed,wave,boundary,mae_ms
+1,P,onset,12.43
+2,P,onset,11.27
+3,P,onset,10.02
+1,P,offset,11.08
+2,P,offset,12.79
+3,P,offset,12.69
+1,T,onset,23.67
+2,T,onset,25.61
+3,T,onset,23.79
+1,T,offset,16.11
+2,T,offset,17.21
+3,T,offset,18.31

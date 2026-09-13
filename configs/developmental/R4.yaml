@@ -1,0 +1,30 @@
+# R4 — Frozen R-aware decoder applied to R1 predictions (Table 3)
+experiment: R4
+description: >
+  Failure-analysis experiment, not a controlled retraining comparison. Applies
+  a frozen, rule-based R-aware hard decoder to the frozen R1 model's raw
+  predictions, using a T-probability threshold (0.40) locked on the QTDB
+  validation set. Substantially degraded Macro F1, suggesting that rigid
+  physiological decoding can overly restrict valid model predictions.
+
+sampling_rate_hz: 250
+window: {length: 360, r_centered: true, pre_r: 120, post_r: 240}
+
+model:
+  architecture: RPeakGuidedML2 (frozen R1 weights) + rule-based R-aware decoder
+  base_checkpoint: best_ml2_rpeak_guided.pth  # frozen R1
+
+decoder:
+  type: hard_threshold
+  t_wave_probability_threshold: 0.40
+  threshold_selection: locked on QTDB validation set
+
+dataset:
+  validation: qtdb_validation
+  test: ludb_full_200
+
+results:
+  qtdb_macro_f1: 0.7328
+  ludb_macro_f1: 0.7119
+  missed_t_qtdb_validation: 21124
+  missed_true_waves_ludb: {P: 1373, T: 1098}

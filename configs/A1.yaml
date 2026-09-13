@@ -1,0 +1,49 @@
+# A1 — R-centered representation (matched A0-A4 ablation, Table 2)
+experiment: A1
+description: >
+  Introduces R-centered windows: each window is aligned to a Pan-Tompkins-detected
+  R peak at a fixed temporal offset (PRE=120, POST=240), replacing A0's fixed,
+  non-aligned stride windows. Isolates the effect of R-centered representation.
+
+sampling_rate_hz: 250
+
+window:
+  length: 360
+  r_centered: true
+  pre_r: 120
+  post_r: 240
+
+model:
+  architecture: RPeakGuidedML2
+  input_channels: 1
+  conv1_filters: 32
+  conv1_kernel: 7
+  conv2_filters: 64
+  conv2_kernel: 5
+  bilstm_hidden: 128
+  bilstm_layers: 1
+  bidirectional: true
+  dropout: 0.3
+  num_classes: 3
+
+training:
+  optimizer: Adam
+  learning_rate: 0.001
+  batch_size: 64
+  epochs: 15
+  seeds: [1, 2, 3]
+  early_stopping: false
+  checkpoint_selection: best_validation_loss
+
+loss:
+  type: unweighted_focal
+  gamma: 2.0
+
+dataset:
+  train: qtdb_train
+  validation: qtdb_validation
+  test: ludb_test
+
+results:
+  ludb_macro_f1_mean: 0.8202
+  ludb_macro_f1_std: 0.0009

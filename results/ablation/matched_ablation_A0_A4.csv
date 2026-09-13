@@ -1,0 +1,6 @@
+configuration,description,ludb_macro_f1_mean,ludb_macro_f1_std,n_seeds
+A0,"Fixed, non-R-centered baseline",0.7999,0.0042,3
+A1,R-centered representation,0.8202,0.0009,3
+A2,A1 + extended post-R context (POST320),0.8308,0.0078,3
+A3,A2 + normalized temporal-position channel,0.8263,0.0061,3
+A4,A3 + supervised LUDB adaptation,0.8415,0.0073,3

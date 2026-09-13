@@ -1,0 +1,40 @@
+# R1 — Cross-entropy baseline (developmental R1-R6, Table 3)
+experiment: R1
+description: Standard cross-entropy loss, R-centered PRE=120/POST=240 windows.
+
+sampling_rate_hz: 250
+window: {length: 360, r_centered: true, pre_r: 120, post_r: 240}
+
+model:
+  architecture: RPeakGuidedML2
+  input_channels: 1
+  conv1_filters: 32
+  conv1_kernel: 7
+  conv2_filters: 64
+  conv2_kernel: 5
+  bilstm_hidden: 128
+  dropout: 0.3
+  num_classes: 3
+
+training:
+  optimizer: Adam
+  learning_rate: 0.001
+  batch_size: 64
+  epochs: 30
+  checkpoint_selection: best_validation_loss
+  note: Single unseeded development run (torch.manual_seed not set in this stage).
+
+loss:
+  type: cross_entropy
+
+dataset:
+  train: qtdb_train
+  validation: qtdb_validation
+  test: ludb_full_200   # external test used before the adaptation/test split existed
+
+results:
+  qtdb_macro_f1: 0.9026
+  ludb_macro_f1: 0.8203
+  best_epoch: 11
+  best_validation_loss: 0.1866
+  checkpoint: best_ml2_rpeak_guided.pth

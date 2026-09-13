@@ -1,0 +1,76 @@
+{
+  "window_lengths": {
+    "primary": 360,
+    "extended": 440
+  },
+  "pre_r_samples": 120,
+  "post_r_samples": {
+    "primary": 240,
+    "extended": 320
+  },
+  "qtdb_sampling_rate_hz": 250,
+  "ludb_native_sampling_rate_hz": 500,
+  "ludb_processing_sampling_rate_hz": 250,
+  "qtdb_annotation_source": "pu0",
+  "ludb_annotation_source": "ii",
+  "r_peak_detector": "pan_tompkins",
+  "normalization": "mean/std computed on QTDB training windows only",
+  "summary": [
+    {
+      "dataset": "QTDB",
+      "partition": "train",
+      "total_records": 84,
+      "total_windows": 87111,
+      "window_length": 360
+    },
+    {
+      "dataset": "QTDB",
+      "partition": "validation",
+      "total_records": 21,
+      "total_windows": 22799,
+      "window_length": 360
+    },
+    {
+      "dataset": "LUDB",
+      "partition": "adaptation",
+      "total_records": 20,
+      "total_windows": 194,
+      "window_length": 360
+    },
+    {
+      "dataset": "LUDB",
+      "partition": "test",
+      "total_records": 180,
+      "total_windows": 1710,
+      "window_length": 360
+    },
+    {
+      "dataset": "QTDB",
+      "partition": "train",
+      "total_records": 84,
+      "total_windows": 87088,
+      "window_length": 440
+    },
+    {
+      "dataset": "QTDB",
+      "partition": "validation",
+      "total_records": 21,
+      "total_windows": 22793,
+      "window_length": 440
+    },
+    {
+      "dataset": "LUDB",
+      "partition": "adaptation",
+      "total_records": 20,
+      "total_windows": 183,
+      "window_length": 440
+    },
+    {
+      "dataset": "LUDB",
+      "partition": "test",
+      "total_records": 180,
+      "total_windows": 1655,
+      "window_length": 440
+    }
+  ]
+}

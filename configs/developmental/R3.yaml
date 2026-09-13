@@ -1,0 +1,42 @@
+# R3 — Unweighted focal loss; selected as reference baseline (Table 3)
+experiment: R3
+description: >
+  Same architecture/windows as R1/R2, with unweighted focal loss. Restored the
+  precision-recall balance and achieved the strongest baseline performance;
+  selected as the reference baseline for the R4-R6 physiological-guidance
+  experiments.
+
+sampling_rate_hz: 250
+window: {length: 360, r_centered: true, pre_r: 120, post_r: 240}
+
+model:
+  architecture: RPeakGuidedML2
+  input_channels: 1
+  conv1_filters: 32
+  conv1_kernel: 7
+  conv2_filters: 64
+  conv2_kernel: 5
+  bilstm_hidden: 128
+  dropout: 0.3
+  num_classes: 3
+
+training:
+  optimizer: Adam
+  learning_rate: 0.001
+  batch_size: 64
+  epochs: 30
+  checkpoint_selection: best_validation_loss
+
+loss:
+  type: unweighted_focal
+  gamma: 2.0
+
+dataset:
+  train: qtdb_train
+  validation: qtdb_validation
+  test: ludb_full_200
+
+results:
+  qtdb_macro_f1: 0.9061
+  ludb_macro_f1: 0.8236
+  checkpoint: best_ml2_rpeak_guided_focal_unweighted.pth

@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use this software or its reproducibility materials, please cite the paper below."
+title: "Physiologically Guided R-Centered Deep Learning for ECG Wave Delineation Across Heterogeneous Databases"
+type: software
+authors:
+  - family-names: Kanakeri
+    given-names: Shruti
+    affiliation: PES University, India
+  - family-names: Hebbalalu
+    given-names: "Vishwambhara R"
+    affiliation: PES University, India
+  - family-names: Amembal
+    given-names: "Vrishank N"
+    affiliation: PES University, India
+  - family-names: Karanam
+    given-names: Vyshnavi
+    affiliation: PES University, India
+  - family-names: Sharma
+    given-names: "Yukthi N"
+    affiliation: PES University, India
+  - family-names: Patil
+    given-names: "Ashok Kumar"
+    affiliation: PES University, India
+preferred-citation:
+  type: conference-paper
+  title: "Physiologically Guided R-Centered Deep Learning for ECG Wave Delineation Across Heterogeneous Databases"
+  authors:
+    - family-names: Kanakeri
+      given-names: Shruti
+    - family-names: Hebbalalu
+      given-names: "Vishwambhara R"
+    - family-names: Amembal
+      given-names: "Vrishank N"
+    - family-names: Karanam
+      given-names: Vyshnavi
+    - family-names: Sharma
+      given-names: "Yukthi N"
+    - family-names: Patil
+      given-names: "Ashok Kumar"
+  year: 2026
+  conference:
+    name: "ICBBE 2026"
+  doi: "10.1145/nnnnnnn.nnnnnnn"

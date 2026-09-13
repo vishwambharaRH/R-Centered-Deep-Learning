@@ -1,0 +1,4 @@
+ludb_record,p_wave_f1,t_wave_f1,total_r_errors,note
+90,0.0,0.7615,18,Severe R-detection error coincides with complete P-wave degradation
+93,0.0,0.7770,16,Severe R-detection error coincides with complete P-wave degradation
+74,0.0,0.8849,15,Severe R-detection error coincides with complete P-wave degradation

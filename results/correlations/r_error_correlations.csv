@@ -1,0 +1,5 @@
+r_error_measure,p_f1_spearman_rho,p_f1_p_value_sig,t_f1_spearman_rho,t_f1_p_value_sig,pt_macro_f1_spearman_rho,pt_macro_f1_p_value_sig
+Total R errors,-0.3254,**,-0.2293,**,-0.3342,***
+Missed R rate,-0.3191,**,-0.1495,*,-0.3043,***
+False-positive R rate,-0.3149,**,-0.1035,,-0.1752,*
+R timing error,-0.1170,,-0.0784,,-0.1660,*

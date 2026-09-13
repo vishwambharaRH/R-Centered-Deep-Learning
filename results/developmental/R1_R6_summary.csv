@@ -1,0 +1,7 @@
+experiment,configuration,qtdb_macro_f1,ludb_macro_f1,note
+R1,Cross-entropy baseline,0.9026,0.8203,External evaluation on all 200 LUDB records
+R2,Weighted focal loss,0.8420,0.7604,External evaluation on all 200 LUDB records
+R3,Unweighted focal loss (reference baseline),0.9061,0.8236,External evaluation on all 200 LUDB records
+R4,Frozen R-aware decoder (failure analysis),0.7328,0.7119,Rule-based decoder on frozen R1 predictions; not a controlled retraining comparison
+R5,R audit + R-centered + POST320,0.9071,0.8266,External evaluation on all 200 LUDB records
+R6,Temporal channel + LUDB adaptation,0.9122,0.8451,"Adapted on 20 LUDB records, evaluated on the remaining 180 held-out records; not directly comparable to R1/R5's 200-record external evaluation"

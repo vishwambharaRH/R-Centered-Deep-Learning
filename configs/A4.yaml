@@ -1,0 +1,51 @@
+# A4 — A3 + supervised LUDB adaptation (matched A0-A4 ablation, Table 2)
+experiment: A4
+description: >
+  Uses the best A3 checkpoint for each seed as initialization, followed by 8
+  epochs of supervised adaptation on the 20-record LUDB adaptation set. The
+  remaining 180 LUDB records were kept untouched and scored only after this
+  adaptation schedule (fixed in advance) completed.
+
+sampling_rate_hz: 250
+
+window:
+  length: 440
+  r_centered: true
+  pre_r: 120
+  post_r: 320
+  temporal_position_channel: true
+
+model:
+  architecture: RPeakTimeML2
+  input_channels: 2
+  conv1_filters: 32
+  conv1_kernel: 7
+  conv2_filters: 64
+  conv2_kernel: 5
+  bilstm_hidden: 128
+  bilstm_layers: 1
+  bidirectional: true
+  dropout: 0.3
+  num_classes: 3
+
+training:
+  base_checkpoint: A3
+  optimizer: Adam
+  learning_rate: 0.0001
+  batch_size: 64
+  epochs: 8
+  seeds: [1, 2, 3]
+  early_stopping: false
+  checkpoint_selection: final_epoch
+
+loss:
+  type: unweighted_focal
+  gamma: 2.0
+
+dataset:
+  adaptation: ludb_adaptation
+  test: ludb_test
+
+results:
+  ludb_macro_f1_mean: 0.8415
+  ludb_macro_f1_std: 0.0073

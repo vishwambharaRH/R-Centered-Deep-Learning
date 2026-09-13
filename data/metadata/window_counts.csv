@@ -1,0 +1,9 @@
+dataset,partition,total_records,total_windows,window_length
+QTDB,train,84,87111,360
+QTDB,validation,21,22799,360
+LUDB,adaptation,20,194,360
+LUDB,test,180,1710,360
+QTDB,train,84,87088,440
+QTDB,validation,21,22793,440
+LUDB,adaptation,20,183,440
+LUDB,test,180,1655,440
