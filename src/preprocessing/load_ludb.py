@@ -4,7 +4,7 @@ from scipy.signal import resample_poly
 import wfdb
 
 from .annotations import generate_labels
-from .windowing import create_windows
+from .windowing import create_windows, create_fixed_windows
 from ..r_peak.pan_tompkins import pan_tompkins_r_peaks
 
 
@@ -24,6 +24,18 @@ def ludb_record(record_name, post, ludb_dir):
     ecg, labels = ecg[:size], labels[:size]
     r_peaks = pan_tompkins_r_peaks(ecg, 250.0)
     return create_windows(ecg, labels, r_peaks, post)
+
+
+def ludb_record_fixed(record_name, length, stride, ludb_dir):
+    """Load one LUDB record and return fixed-stride, non-R-centered windows (A0 baseline)."""
+    path = str(ludb_dir / record_name)
+    record = wfdb.rdrecord(path)
+    lead = record.sig_name.index('ii')
+    ecg = resample_poly(record.p_signal[:, lead].astype(np.float32), up=1, down=2)
+    labels = generate_labels(wfdb.rdann(path, 'ii'), len(ecg), sample_scale=0.5)
+    size = min(len(ecg), len(labels))
+    ecg, labels = ecg[:size], labels[:size]
+    return create_fixed_windows(ecg, labels, length, stride)
 
 
 def list_ludb_records(ludb_dir):

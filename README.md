@@ -89,14 +89,36 @@ train: 87,111 windows from 84 records; LUDB held-out test: 1,710 windows from
 ### 4. Train a configuration
 
 ```bash
-python scripts/train_ablation.py --config configs/A1.yaml --seed 1
+python scripts/train_ablation.py --config configs/A1.yaml --seed 1 \
+    --qtdb-dir /path/to/qtdb/1.0.0 --ludb-dir /path/to/ludb/1.0.1/data
 ```
+
+A0 trains on fixed, non-R-centered windows; A1-A3 train on R-centered
+windows. **A4 does not train on QTDB** — per the paper, it loads the
+matching-seed A3 checkpoint and only runs the 8-epoch LUDB adaptation, so
+train A3 for a seed before running A4 for that seed.
 
 ### 5. Evaluate / reproduce a results table
 
 ```bash
-python scripts/evaluate_ablation.py --config configs/A1.yaml --checkpoint <path>
-python scripts/reproduce_all_results.py   # regenerates every CSV under results/
+python scripts/evaluate_ablation.py --config configs/A1.yaml --checkpoint <path> --ludb-dir <path>
+python scripts/reproduce_all_results.py --qtdb-dir <path> --ludb-dir <path>
+```
+
+`reproduce_all_results.py` regenerates the splits, dataset metadata, the
+R-peak audit (Table 6, no trained model needed), and — unless
+`--skip-training` — the full A0-A4 training + evaluation sweep (Table 2). It
+does **not** regenerate the event-level, boundary-level, or correlation
+tables end-to-end on its own, since those need a specific chosen checkpoint;
+run these against a trained A4 checkpoint instead:
+
+```bash
+python scripts/generate_event_boundary_report.py --config configs/A4.yaml \
+    --checkpoint checkpoints/A4_seed1.pth --ludb-dir <path> --seed 1   # Tables 4 & 5
+python scripts/generate_correlation_analysis.py --config configs/A4.yaml \
+    --checkpoint checkpoints/A4_seed1.pth --ludb-dir <path>            # Table 7
+python scripts/run_r4_decoder.py --r1-checkpoint checkpoints/R1_seed1.pth \
+    --qtdb-dir <path> --ludb-dir <path> --train-mean <m> --train-std <s>  # Section 4.3 (R4)
 ```
 
 ## Dataset Splits
@@ -149,7 +171,9 @@ independent R-peak audit, and the R-error/downstream-F1 correlation analysis.
 | Loss functions | `src/models/losses.py` |
 | Training parameters, seeds | `configs/`, `src/training/train.py` |
 | LUDB adaptation procedure | `src/training/adapt.py`, `configs/A4.yaml` |
-| Event-level / boundary-level / correlation analysis | `src/analysis/` |
+| Event-level / boundary-level / correlation analysis | `src/analysis/`, `scripts/generate_event_boundary_report.py`, `scripts/generate_correlation_analysis.py` |
+| R-peak audit, executable end to end | `scripts/generate_r_peak_audit.py` |
+| R4 rule-based decoder (Section 4.3) | `src/analysis/r4_decoder.py`, `scripts/run_r4_decoder.py` |
 | Reported results | `results/` |
 
 ## Datasets

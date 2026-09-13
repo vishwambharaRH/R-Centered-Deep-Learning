@@ -11,7 +11,10 @@ preprocessing scripts in `src/preprocessing/` then read them directly.
 - Training: 84 records
 - Validation: 21 records
 - Sampling rate: 250 Hz (native)
-- Lead: first recorded channel (MLII)
+- Lead: first recorded channel (`record.p_signal[:, 0]`) — QTDB's channel
+  ordering is not uniform across all records, so this is not verified to be
+  MLII on every record; treat it as "first recorded channel," matching the
+  paper's wording, not a guaranteed lead identity.
 - Annotation source: `pu0`
 
 ## Lobachevsky University Database (LUDB)

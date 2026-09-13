@@ -3,7 +3,7 @@ import numpy as np
 import wfdb
 
 from .annotations import generate_labels
-from .windowing import create_windows
+from .windowing import create_windows, create_fixed_windows
 from ..r_peak.pan_tompkins import pan_tompkins_r_peaks
 
 
@@ -15,6 +15,19 @@ def qtdb_record(record_name, post, qtdb_dir):
     labels = generate_labels(wfdb.rdann(path, 'pu0'), len(ecg))
     r_peaks = pan_tompkins_r_peaks(ecg, float(record.fs))
     return create_windows(ecg, labels, r_peaks, post)
+
+
+def qtdb_record_fixed(record_name, length, stride, qtdb_dir):
+    """Load one QTDB record and return fixed-stride, non-R-centered windows (A0 baseline).
+
+    No R-peak detection is used here at all — this is the ``create_fixed_windows``
+    counterpart to ``qtdb_record``, for the A0 fixed-window configuration.
+    """
+    path = str(qtdb_dir / record_name)
+    record = wfdb.rdrecord(path)
+    ecg = record.p_signal[:, 0].astype(np.float32)
+    labels = generate_labels(wfdb.rdann(path, 'pu0'), len(ecg))
+    return create_fixed_windows(ecg, labels, length, stride)
 
 
 def list_qtdb_records(qtdb_dir):

@@ -34,7 +34,7 @@ training:
   epochs: 15
   seeds: [1, 2, 3]
   early_stopping: false
-  checkpoint_selection: best_validation_loss
+  checkpoint_selection: best_validation_macro_f1
 
 loss:
   type: unweighted_focal

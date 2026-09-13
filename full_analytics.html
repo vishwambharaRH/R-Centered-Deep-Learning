@@ -109,8 +109,10 @@
 
 <h2>Model &amp; R-Guided Framework</h2>
 <p class="lede">A two-block 1D CNN (32→64 filters) feeding a bidirectional LSTM (128 hidden units/direction), dropout 0.3, linear classifier over {Background, P, T}. R peaks are detected with Pan–Tompkins and used as the fixed anchor for window construction.</p>
-<img src="figures/architecture.png" alt="CNN-BiLSTM baseline architecture">
-<figcaption><b>Fig. 1</b> — CNN–BiLSTM baseline architecture.</figcaption>
+<img src="figures/architecture.png" alt="CNN-BiLSTM baseline architecture, as published">
+<figcaption><b>Fig. 1</b> — CNN–BiLSTM baseline architecture, as published.</figcaption>
+<img src="figures/architecture_corrected.svg" alt="Corrected architecture schematic matching the actual code">
+<figcaption><b>Corrected schematic</b> — Fig. 1 as published labels the input <code>N = 512</code> and shows <code>Conv1D → ReLU → BatchNorm</code>; the actual code (<code>src/models/cnn_bilstm.py</code>) uses 360/440-sample windows and <code>Conv1D → BatchNorm → ReLU</code>. See <code>figures/README.md</code>.</figcaption>
 <img src="figures/r_guided_framework.png" alt="R-guided delineation framework">
 <figcaption><b>Fig. 2</b> — R-guided delineation framework.</figcaption>
 
@@ -177,10 +179,10 @@
 <p class="lede">Pan–Tompkins detector, evaluated against reference R annotations (100 ms tolerance) — independent of downstream P/T performance.</p>
 <table>
   <tr><th>Dataset</th><th class="num">Sensitivity</th><th class="num">PPV</th><th class="num">F1</th><th class="num">Timing error (ms)</th></tr>
-  <tr><td>QTDB</td><td class="num">0.9780</td><td class="num">0.9863</td><td class="num">0.9804</td><td class="num">13.31</td></tr>
-  <tr><td>LUDB</td><td class="num">0.9753</td><td class="num">0.7971</td><td class="num">0.8800</td><td class="num">3.07</td></tr>
+  <tr><td>QTDB</td><td class="num">0.9780</td><td class="num">0.9863</td><td class="num">0.9824</td><td class="num">13.31</td></tr>
+  <tr><td>LUDB</td><td class="num">0.9753</td><td class="num">0.7971</td><td class="num">0.8815</td><td class="num">3.07</td></tr>
 </table>
-<div class="note">LUDB shows far lower PPV despite tighter timing error — more false-positive detections on LUDB.</div>
+<div class="note">LUDB shows far lower PPV despite tighter timing error — more false-positive detections on LUDB. Regenerated live from the real QTDB/LUDB data via <code>scripts/generate_r_peak_audit.py</code>; sensitivity, PPV, and timing error match the paper's Table&nbsp;6 exactly, F1 within ~0.002 (aggregation-convention difference, see <code>results/README.md</code>).</div>
 
 <h2>R-Localization Error vs. Downstream Delineation</h2>
 <p class="lede">Spearman correlation between R-detector error and downstream P/T performance, n=180 LUDB test records. All correlations are negative.</p>

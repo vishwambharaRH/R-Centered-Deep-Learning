@@ -27,6 +27,21 @@ def create_windows(ecg, labels, r_peaks, post):
     return np.asarray(xs, dtype=np.float32), np.asarray(ys, dtype=np.int64)
 
 
+def create_fixed_windows(ecg, labels, length, stride):
+    """Slice fixed-length, fixed-stride windows with NO R-peak alignment.
+
+    This is A0's non-R-centered baseline windowing (Section 3.6.2 of the
+    paper: "A0 used fixed non-R-centered 360-sample windows"; Section 3.2.3:
+    "generated with a fixed stride of 256 samples"). Unlike
+    ``create_windows``, the R-peak detector plays no role here at all.
+    """
+    xs, ys = [], []
+    for start in range(0, len(ecg) - length + 1, stride):
+        xs.append(ecg[start:start + length])
+        ys.append(labels[start:start + length])
+    return np.asarray(xs, dtype=np.float32), np.asarray(ys, dtype=np.int64)
+
+
 def build_partition(record_names, builder, post, data_dir):
     """Concatenate windows across a list of records, tracking per-window record ids.
 
@@ -40,6 +55,28 @@ def build_partition(record_names, builder, post, data_dir):
     for record_name in record_names:
         try:
             x, y = builder(record_name, post, data_dir)
+            if len(x):
+                xs.append(x)
+                ys.append(y)
+                ids.extend([record_name] * len(x))
+        except Exception as exc:  # pragma: no cover - data-specific guard
+            skipped.append({'record': record_name, 'error': str(exc)})
+    if not xs:
+        raise RuntimeError('No usable windows generated for the selected partition.')
+    return np.concatenate(xs), np.concatenate(ys), np.asarray(ids), skipped
+
+
+def build_partition_fixed(record_names, builder, length, stride, data_dir):
+    """Like ``build_partition``, but for A0's fixed-window (non-R-centered) builders.
+
+    ``builder`` is one of ``load_qtdb.qtdb_record_fixed`` /
+    ``load_ludb.ludb_record_fixed``, called as ``builder(record_name, length, stride, data_dir)``.
+    """
+    xs, ys, ids = [], [], []
+    skipped = []
+    for record_name in record_names:
+        try:
+            x, y = builder(record_name, length, stride, data_dir)
             if len(x):
                 xs.append(x)
                 ys.append(y)
