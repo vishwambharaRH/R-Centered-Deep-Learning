@@ -49,15 +49,33 @@ class RPeakGuidedML2(nn.Module):
 
 
 class RPeakTimeML2(nn.Module):
-    """A3/A4 (and R6) variant: adds the normalized R-relative time channel."""
+    """A3/A4 (and R6) variant: adds the normalized R-relative time channel.
+
+    Unlike ``RPeakGuidedML2``, this does NOT wrap its CNN/LSTM in the
+    ``CNNFeatureExtractor``/``BiLSTMBlock`` submodules above — it defines
+    ``cnn`` as a flat ``nn.Sequential`` and ``bilstm`` as a flat ``nn.LSTM``
+    directly, matching that asymmetry in the original training script
+    (`colab_l4_ecg_train.py`) exactly. This is required, not cosmetic: the
+    released R6/A4 checkpoints (e.g. ``best_ml2_r6_time_ludb10.pth``) were
+    saved from that flat structure, so their state_dict keys are ``cnn.0.*``
+    / ``bilstm.weight_ih_l0`` etc. — an equivalent-but-wrapped module here
+    would raise a state_dict key mismatch when loading them.
+    """
 
     def __init__(self, num_classes=3):
         super().__init__()
-        self.cnn = CNNFeatureExtractor(channels=2)
-        self.bilstm = BiLSTMBlock()
+        self.cnn = nn.Sequential(
+            nn.Conv1d(2, 32, kernel_size=7, padding=3),
+            nn.BatchNorm1d(32),
+            nn.ReLU(),
+            nn.Conv1d(32, 64, kernel_size=5, padding=2),
+            nn.BatchNorm1d(64),
+            nn.ReLU(),
+        )
+        self.bilstm = nn.LSTM(64, 128, num_layers=1, batch_first=True, bidirectional=True)
         self.dropout = nn.Dropout(0.3)
         self.classifier = nn.Linear(256, num_classes)
 
     def forward(self, x):
         x = self.cnn(x).permute(0, 2, 1)
-        return self.classifier(self.dropout(self.bilstm(x)))
+        return self.classifier(self.dropout(self.bilstm(x)[0]))

@@ -49,7 +49,7 @@ ecg-r-centered-delineation/
 │   └── analysis/              # event-level, boundary-level, correlation analysis
 ├── scripts/                  # dataset prep, report generation, ablation runners
 ├── results/                  # machine-readable CSVs for every paper table
-├── figures/
+├── figures/                  # figures/README.md documents corrections vs. the published PDF
 └── paper/
     └── ICBBE-17.pdf
 ```

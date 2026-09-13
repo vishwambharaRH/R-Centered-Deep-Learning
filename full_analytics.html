@@ -46,8 +46,8 @@
 
   .stack-track { display: flex; height: 22px; border-radius: 3px; overflow: hidden; }
   .seg-bg { background: #9a9a9a; }
-  .seg-p  { background: #e07b39; }
-  .seg-t  { background: #1a9463; }
+  .seg-p  { background: #1a9463; }
+  .seg-t  { background: #e07b39; }
   .seg { display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; }
   .legend { font-size: 13px; color: #555; margin-top: 8px; }
   .legend span { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
@@ -105,7 +105,7 @@
     <div class="seg seg-t" style="width:14.4%">14%</div>
   </div>
 </div>
-<div class="legend"><span style="background:#9a9a9a"></span>Background &nbsp; <span style="background:#e07b39"></span>P wave &nbsp; <span style="background:#1a9463"></span>T wave</div>
+<div class="legend"><span style="background:#9a9a9a"></span>Background &nbsp; <span style="background:#1a9463"></span>P wave &nbsp; <span style="background:#e07b39"></span>T wave</div>
 
 <h2>Model &amp; R-Guided Framework</h2>
 <p class="lede">A two-block 1D CNN (32→64 filters) feeding a bidirectional LSTM (128 hidden units/direction), dropout 0.3, linear classifier over {Background, P, T}. R peaks are detected with Pan–Tompkins and used as the fixed anchor for window construction.</p>
@@ -149,10 +149,10 @@
 <div class="note">R4's frozen, rule-based decoder substantially <b>degraded</b> performance — rigid physiological constraints can overly restrict valid predictions.</div>
 
 <h2>Representative Delineation</h2>
-<img src="figures/qtdb_example.png" alt="QTDB delineation example">
-<figcaption><b>Fig. 3</b> — QTDB validation beat: ground truth vs. R3 baseline prediction.</figcaption>
-<img src="figures/ludb_example.png" alt="LUDB delineation example">
-<figcaption><b>Fig. 4</b> — Held-out LUDB beat: ground truth vs. R3 baseline vs. R6 (proposed).</figcaption>
+<img src="figures/qtdb_example_corrected.png" alt="Representative QTDB validation ECG segment, with Background/P/T legend">
+<figcaption><b>Fig. 3</b> — Representative QTDB validation ECG segment: ground truth vs. R3 baseline prediction. P wave is teal, T wave is orange; QRS is not a model class — it's folded into Background.</figcaption>
+<img src="figures/ludb_example_corrected.png" alt="Representative LUDB held-out ECG segment, with Background/P/T legend">
+<figcaption><b>Fig. 4</b> — Representative LUDB held-out ECG segment: ground truth vs. R3 baseline vs. R6 (proposed).</figcaption>
 
 <h2>Event-Level Delineation</h2>
 <p class="lede">Final adapted configuration (A4/R6), one-to-one event matching within 100 ms, on the 180-record LUDB test set.</p>
