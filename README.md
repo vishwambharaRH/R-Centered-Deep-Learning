@@ -204,6 +204,40 @@ independent R-peak audit, and the R-error/downstream-F1 correlation analysis.
 | R4 rule-based decoder (Section 4.3) | `src/analysis/r4_decoder.py`, `scripts/run_r4_decoder.py` |
 | Reported results | `results/` |
 
+## Complete Experimental Specification
+
+The repository provides the complete implementation-level specification of
+the experiments reported in the paper. The manuscript summarizes the
+principal methodological choices, while the repository provides the exact
+parameters and executable procedures needed to reproduce the experiments.
+
+### Model and Training
+
+- Input representation: single-channel ECG for A0/A1/A2; two-channel input
+  for A3/A4, with the second channel providing normalized temporal position.
+- CNN: Conv1d (1/32 channels, kernel 7, padding 3) → BatchNorm → ReLU →
+  Conv1d (32/64 channels, kernel 5, padding 2) → BatchNorm → ReLU.
+- Recurrent layer: single-layer bidirectional LSTM with 128 hidden units per
+  direction.
+- Dropout: 0.3 before the final classifier.
+- Classifier: linear layer from 256 features to three classes
+  (Background, P, T).
+- Optimizer: Adam.
+- Learning rate: 1e-3 for QTDB training.
+- Batch size: 64.
+- R1: standard cross-entropy loss.
+- R2: weighted focal loss with inverse-frequency class weights
+  [0.5175, 2.7187, 1.4292] for Background, P, and T, respectively, and
+  gamma = 2.0.
+- R3 and A0-A4: unweighted focal loss with gamma = 2.0.
+- No early stopping was used.
+- A0-A3: 15 training epochs with seeds 1, 2, and 3.
+- A4: matching-seed A3 checkpoint followed by 8 epochs of supervised LUDB
+  adaptation using Adam with learning rate 1e-4.
+- A0-A3 model selection: highest QTDB validation Macro F1.
+- A4 evaluation: final adaptation epoch on the untouched 180-record LUDB
+  test set.
+
 ## Datasets
 
 - QT Database (QTDB)
