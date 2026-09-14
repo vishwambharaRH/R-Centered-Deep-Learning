@@ -177,6 +177,22 @@ touching the Background/P decision at all, which is why it substantially
 *degraded* Macro F1 (0.9026 → 0.7328 on QTDB) rather than improving it: rigid
 physiological constraints can overly restrict valid model predictions.
 
+### Normalized Temporal-Position Channel
+
+For configurations using the temporal-position channel (A3/A4), each sample
+is augmented with its normalized position relative to the detected R peak.
+For sample position \(i\), the temporal value is defined as:
+
+\[
+t_i = \frac{i-PRE}{POST},
+\]
+
+where \(PRE\) is the number of samples preceding the R peak and \(POST\) is
+the number of samples following it. Thus, the detected R peak corresponds
+to \(t_i=0\), samples before R have negative values, and samples after R have
+positive values. For A3/A4, this temporal channel is provided alongside the
+normalized ECG signal as a two-channel model input.
+
 ## Results
 
 Machine-readable results for every table in the paper are under `results/`
