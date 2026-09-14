@@ -183,9 +183,11 @@ For configurations using the temporal-position channel (A3/A4), each sample
 is augmented with its normalized position relative to the detected R peak.
 For sample position \(i\), the temporal value is defined as:
 
-$\[
+$$
+\[
 t_i = \frac{i-PRE}{POST},
-\]$
+\]
+$$
 
 where \(PRE\) is the number of samples preceding the R peak and \(POST\) is
 the number of samples following it. Thus, the detected R peak corresponds
