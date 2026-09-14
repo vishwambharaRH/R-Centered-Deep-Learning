@@ -184,9 +184,7 @@ is augmented with its normalized position relative to the detected R peak.
 For sample position \(i\), the temporal value is defined as:
 
 $$
-\[
-t_i = \frac{i-PRE}{POST},
-\]
+t_i = \frac{i-PRE}{POST}, 
 $$
 
 where \(PRE\) is the number of samples preceding the R peak and \(POST\) is
