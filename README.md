@@ -247,13 +247,21 @@ parameters and executable procedures needed to reproduce the experiments.
   gamma = 2.0.
 - R3 and A0-A4: unweighted focal loss with gamma = 2.0.
 - No early stopping was used.
-- A0-A3: 15 training epochs with seeds 1, 2, and 3.
-- A4: matching-seed A3 checkpoint followed by 8 epochs of supervised LUDB
-  adaptation using Adam with learning rate 1e-4.
-- A0-A3 model selection: highest QTDB validation Macro F1.
-- A4 evaluation: final adaptation epoch on the untouched 180-record LUDB
-  test set.
 
+**Historical R1-R6 developmental runs:** The R1-R6 results were retained to
+document framework evolution. Retrained developmental configurations selected
+the checkpoint with the lowest QTDB validation loss. R4 used a frozen R1
+checkpoint, while R6 used a fixed pretraining checkpoint followed by a fixed
+8-epoch LUDB adaptation schedule. These historical runs therefore do not use
+the fully controlled checkpoint-selection protocol of the matched A0-A4
+ablation.
+
+**Matched A0-A4 ablation:** A0-A3 were trained for 15 epochs using seeds 1, 2,
+and 3, with model selection based on the highest QTDB validation Macro F1.
+A4 initialized from the corresponding best A3 checkpoint for each seed and
+underwent 8 epochs of supervised LUDB adaptation using Adam with learning rate
+1e-4. The final adaptation epoch was evaluated on the 180 untouched LUDB test
+records.
 ## Datasets
 
 - QT Database (QTDB)
