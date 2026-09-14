@@ -149,6 +149,34 @@ QTDB train/validation, evaluation on the 180-record LUDB test set):
 **Developmental R1-R6** (`configs/developmental/`, sequential framework evolution,
 presented as evidence rather than a controlled ablation — see Section 3.6.1 of the paper).
 
+## R-Aware Decoder (R4)
+
+R4 (Section 4.3, `configs/developmental/R4.yaml`) applies a frozen, rule-based
+decoder to a frozen R1 model's raw per-sample class probabilities, using a
+T-probability threshold locked once on the QTDB validation set. Full
+implementation: `src/analysis/r4_decoder.py`; runnable end to end:
+`scripts/run_r4_decoder.py`.
+
+```
+# Lock the threshold once, on QTDB validation only:
+threshold  <- argmax over t in {0.05, 0.10, ..., 0.95} of
+                  F1( (P_val[:, T] >= t),  labels_val == T )
+
+# Frozen decoding rule, applied unchanged to every sample at test time:
+for each sample i:
+    if P(T)_i >= threshold:
+        prediction_i <- T
+    else:
+        prediction_i <- argmax( P(Background)_i, P(P)_i )   # T excluded here
+```
+
+The threshold is fit exactly once and then reused verbatim on QTDB validation
+and the LUDB test set — never re-tuned per record or per dataset. This rule
+made T-wave prediction strictly harder to trigger than plain argmax without
+touching the Background/P decision at all, which is why it substantially
+*degraded* Macro F1 (0.9026 → 0.7328 on QTDB) rather than improving it: rigid
+physiological constraints can overly restrict valid model predictions.
+
 ## Results
 
 Machine-readable results for every table in the paper are under `results/`
